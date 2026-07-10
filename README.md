@@ -1,36 +1,37 @@
-# ORBITALIS — Earth Scan Studio
+# Orbitalis SCAN
 
-Simulador tridimensional de observación terrestre y adquisición satelital.
+Simulador de cartografía orbital inspirado en la experiencia de SCANsat, reconstruido para trabajar con cuerpos reales del Sistema Solar.
 
-## Cómo abrirlo
+## Inicio correcto en Windows
 
-1. Extrae por completo el archivo ZIP.
-2. Conserva juntas las carpetas `assets`, `vendor` y los archivos del proyecto.
-3. Abre `index.html` o ejecuta `INICIAR_ORBITALIS.bat` en Windows.
+1. Extrae completamente el ZIP.
+2. Ejecuta `INICIAR_ORBITALIS.bat`.
+3. El proyecto abrirá `http://127.0.0.1:8765/` en el navegador.
 
-No necesita conexión a Internet: el motor 3D y todas las texturas están incluidos.
+No abras `index.html` directamente. Los navegadores restringen texturas WebGL cargadas mediante `file://`; esa fue la causa de la esfera negra de la versión anterior.
 
-## Modelo físico
+El servidor de la aplicación es local y está escrito en PowerShell. Se necesita conexión a Internet para descargar en la primera carga las cartografías astronómicas y las librerías 3D desde sus repositorios públicos. Para cerrarlo, termina la ventana minimizada «Orbitalis Server» o el proceso de PowerShell correspondiente.
 
-- Tierra representada mediante el elipsoide WGS-84.
-- Propagación kepleriana de dos cuerpos mediante resolución iterativa de la ecuación de Kepler.
-- Elementos configurables: perigeo, excentricidad, inclinación, RAAN y argumento de perigeo.
-- Perturbación secular J2 opcional para la precesión del nodo y del perigeo.
-- Rotación terrestre sideral mediante GMST.
-- Posición solar astronómica aproximada usada simultáneamente para iluminación, terminador y representación del Sol.
-- Intersección analítica del eje del sensor con el elipsoide terrestre.
-- Huella y anchura de barrido obtenidas mediante los rayos extremos del campo de visión.
+## Funcionamiento
 
-## Representación terrestre
+- El botón hamburguesa contiene configuración, telemetría y leyenda.
+- El mapa 2D revela progresivamente la capa visual o de relieve.
+- Cada mundo conserva su cartografía mientras la aplicación permanezca abierta.
+- La cobertura, la huella 3D y el mapa 2D proceden de una única coordenada planetaria.
+- El control inferior modifica solamente la aceleración temporal; no existe una duración máxima.
 
-- Textura diurna Blue Marble de 4096 × 2048 píxeles.
-- Mapa topográfico de 2048 × 1024 aplicado como desplazamiento y relieve lumínico.
-- Capa nocturna de 4096 × 2048 con ciudades visible únicamente en el hemisferio oscuro.
-- Máscara oceánica especular, nubes de 4096 × 2048 y atmósfera dependiente del Sol.
+## Cuerpos disponibles
 
-La opción de relieve `×1` mantiene la proporción física aproximada. Los valores superiores exageran únicamente la altura del terreno para que montañas y cordilleras sean perceptibles a escala planetaria.
+Mercurio, Venus, Tierra, Luna, Marte, Júpiter, Saturno, Urano, Neptuno y Plutón.
 
-## Escala del satélite
+En los gigantes gaseosos y de hielo no existe una superficie sólida cartografiable. El modo «Relieve» representa estructura y contraste de las capas nubosas, no montañas.
 
-La Tierra, la altitud, la órbita y la huella del sensor mantienen una escala común. El modelo del satélite puede ampliarse visualmente porque a tamaño físico real sería prácticamente invisible en una vista global.
+## Modelo
 
+- Órbita kepleriana elíptica.
+- Pericentro, excentricidad, inclinación y RAAN configurables.
+- Radios ecuatoriales y polares independientes.
+- Parámetro gravitacional y rotación específicos de cada cuerpo.
+- Intersección analítica del sensor con el esferoide planetario.
+- Campo de visión y orientación lateral del sensor.
+- Memoria de rastro y geometría acotadas para funcionamiento indefinido.
