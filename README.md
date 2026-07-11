@@ -18,7 +18,14 @@ El servidor de la aplicación es local y está escrito en PowerShell. Se necesit
 - El mapa 2D revela progresivamente la capa visual o de relieve.
 - Cada mundo conserva su cartografía mientras la aplicación permanezca abierta.
 - La cobertura, la huella 3D y el mapa 2D proceden de una única coordenada planetaria.
+- El punto de mira blanco del mapa identifica exactamente el objetivo instantáneo del sensor.
 - El control inferior modifica solamente la aceleración temporal; no existe una duración máxima.
+
+## Laboratorio de comunicaciones
+
+La pestaña «Comunicaciones» crea una constelación configurable de 4 a 24 satélites. Permite seleccionar dos estaciones terrestres y representa una ruta únicamente cuando los satélites están sobre el horizonte y el propio planeta no bloquea los enlaces. También muestra satélites visibles, número de saltos y retardo de propagación estimado.
+
+La pestaña «Aprender» incorpora prácticas breves sobre barrido polar, resolución, horizonte de radio y comunicaciones con la cara oculta.
 
 ## Cuerpos disponibles
 
