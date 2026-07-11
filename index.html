@@ -26,6 +26,14 @@
       <button data-body="neptune">Neptuno</button><button data-body="pluto">Plutón</button>
     </nav>
 
+    <nav class="mode-tabs">
+      <button class="active" data-tab="scan">Escáner</button>
+      <button data-tab="network">Comunicaciones</button>
+      <button data-tab="learn">Aprender</button>
+    </nav>
+
+    <div class="tab-pane active" data-pane="scan">
+
     <section class="menu-section">
       <h2>Órbita</h2>
       <label>Altitud de pericentro <output id="altitudeOut">700 km</output><input id="altitude" type="range" min="100" max="5000" value="700"></label>
@@ -60,6 +68,34 @@
     <section class="menu-section legend-section">
       <h2>Leyenda</h2><p><i class="cyan"></i>Órbita prevista</p><p><i class="green"></i>Terreno adquirido</p><p id="dataNote">Relieve terrestre: topografía global.</p>
     </section>
+    </div>
+
+    <div class="tab-pane" data-pane="network">
+      <section class="menu-section">
+        <h2>Red orbital educativa</h2>
+        <p class="lesson">Construye una constelación y observa cuándo dos estaciones pueden comunicarse mediante satélites visibles sobre su horizonte.</p>
+        <div class="switch-line"><span>Mostrar constelación</span><button class="switch on" id="networkToggle"><i></i></button></div>
+        <label>Número de satélites <output id="constellationOut">12</output><input id="constellation" type="range" min="4" max="24" step="2" value="12"></label>
+        <label>Altitud de la red <output id="networkAltOut">2.000 km</output><input id="networkAlt" type="range" min="300" max="20000" step="100" value="2000"></label>
+        <label>Estación A<select id="stationA"><option value="madrid">Madrid</option><option value="mexico">Ciudad de México</option><option value="jakarta">Yakarta</option><option value="sydney">Sídney</option><option value="tokyo">Tokio</option></select></label>
+        <label>Estación B<select id="stationB"><option value="jakarta">Yakarta</option><option value="mexico">Ciudad de México</option><option value="madrid">Madrid</option><option value="sydney">Sídney</option><option value="tokyo">Tokio</option></select></label>
+      </section>
+      <section class="menu-section network-status">
+        <h2>Estado del enlace</h2>
+        <strong id="linkState">BUSCANDO RUTA</strong>
+        <dl><dt>Satélites visibles A</dt><dd id="visibleA">0</dd><dt>Satélites visibles B</dt><dd id="visibleB">0</dd><dt>Saltos de la ruta</dt><dd id="routeHops">—</dd><dt>Retardo estimado</dt><dd id="routeDelay">—</dd></dl>
+      </section>
+      <section class="menu-section legend-section"><h2>Leyenda de red</h2><p><i class="green"></i>Enlace disponible</p><p><i class="cyan"></i>Constelación orbital</p><p>Una estación solo ve satélites que están por encima de su horizonte local. La ocultación del planeta corta el enlace.</p></section>
+    </div>
+
+    <div class="tab-pane" data-pane="learn">
+      <section class="menu-section"><h2>Laboratorios guiados</h2>
+        <article class="lesson-card"><b>01 · Barrido polar</b><p>Usa una inclinación cercana a 90° y acelera el tiempo. La rotación del planeta desplaza cada pasada y termina cubriendo toda la superficie.</p></article>
+        <article class="lesson-card"><b>02 · Órbita y resolución</b><p>Reduce la altitud y el campo de visión. Obtendrás una franja menor, pero una observación potencialmente más detallada.</p></article>
+        <article class="lesson-card"><b>03 · Horizonte de radio</b><p>En Comunicaciones, compara una red baja con una alta. Más altitud aumenta la zona visible, aunque también el retardo.</p></article>
+        <article class="lesson-card"><b>04 · Cara oculta</b><p>El planeta bloquea las ondas de radio. Para mantener contacto continuo hacen falta relevos o una constelación distribuida.</p></article>
+      </section>
+    </div>
   </aside>
 
   <section id="mapPanel" class="map-panel">
