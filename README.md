@@ -1,44 +1,65 @@
-# Orbitalis SCAN
+# Orbitalis · Laboratorio orbital
 
-Simulador de cartografía orbital inspirado en la experiencia de SCANsat, reconstruido para trabajar con cuerpos reales del Sistema Solar.
+Laboratorio educativo 3D de observación planetaria, constelaciones de satélites, comunicaciones orbitales y navegación GNSS.
 
-## Inicio correcto en Windows
+## Inicio en Windows
 
-1. Extrae completamente el ZIP.
+1. Descarga o clona la rama `main`.
 2. Ejecuta `INICIAR_ORBITALIS.bat`.
-3. El proyecto abrirá `http://127.0.0.1:8765/` en el navegador.
+3. El proyecto abrirá `http://127.0.0.1:8765/`.
 
-No abras `index.html` directamente. Los navegadores restringen texturas WebGL cargadas mediante `file://`; esa fue la causa de la esfera negra de la versión anterior.
+No abras `index.html` mediante `file://`: WebGL y los mapas remotos requieren un servidor HTTP. El servidor PowerShell incluido es local. Se necesita conexión a Internet para obtener las cartografías planetarias en la primera carga.
 
-El servidor de la aplicación es local y está escrito en PowerShell. Se necesita conexión a Internet para descargar en la primera carga las cartografías astronómicas y las librerías 3D desde sus repositorios públicos. Para cerrarlo, termina la ventana minimizada «Orbitalis Server» o el proceso de PowerShell correspondiente.
+## Laboratorios
 
-## Funcionamiento
+### Constelación de observación
 
-- El botón hamburguesa contiene configuración, telemetría y leyenda.
-- El mapa 2D revela progresivamente la capa visual o de relieve.
-- Cada mundo conserva su cartografía mientras la aplicación permanezca abierta.
-- La cobertura, la huella 3D y el mapa 2D proceden de una única coordenada planetaria.
-- El punto de mira blanco del mapa identifica exactamente el objetivo instantáneo del sensor.
-- El control inferior modifica solamente la aceleración temporal; no existe una duración máxima.
+- De 1 a 8 satélites de escaneo simultáneos.
+- Subpestaña, nombre, color y telemetría independientes por vehículo.
+- Altitud, excentricidad, inclinación, RAAN, FOV y apuntamiento propios.
+- Cargas útiles: multiespectral, altimetría láser, SAR, térmico, altimetría oceánica y sondeo atmosférico.
+- Perfiles educativos polar, Landsat, Sentinel e ISS.
+- Cobertura fusionada en un mapa 2D común.
+- Capas cartográficas condicionadas por los datos auténticos disponibles para cada cuerpo; no se generan variantes mediante filtros de color.
 
-## Laboratorio de comunicaciones
+### Comunicaciones multipunto
 
-La pestaña «Comunicaciones» crea una constelación configurable de 4 a 24 satélites. Permite seleccionar dos estaciones terrestres y representa una ruta únicamente cuando los satélites están sobre el horizonte y el propio planeta no bloquea los enlaces. También muestra satélites visibles, número de saltos y retardo de propagación estimado.
+- De 6 a 36 satélites de comunicaciones.
+- 42 ciudades agrupadas por región.
+- Un origen y hasta 12 destinos simultáneos.
+- Escenarios global, europeo, americano y Asia-Pacífico.
+- Visibilidad por horizonte, ocultación planetaria y enlaces intersatelitales.
+- Estado de cada conjunto de rutas, saltos máximos y retardo medio estimado.
 
-La pestaña «Aprender» incorpora prácticas breves sobre barrido polar, resolución, horizonte de radio y comunicaciones con la cara oculta.
+### GNSS / GPS
 
-## Cuerpos disponibles
+- Perfiles GPS, Galileo y GPS + Galileo.
+- Órbitas MEO, planos e inclinaciones diferenciados.
+- Receptor seleccionable entre las ciudades del catálogo.
+- Máscara de elevación y diagrama del cielo.
+- Errores configurables de reloj, atmósfera y multitrayecto.
+- Estimación educativa de GDOP y error horizontal.
 
-Mercurio, Venus, Tierra, Luna, Marte, Júpiter, Saturno, Urano, Neptuno y Plutón.
+### Gráficos
 
-En los gigantes gaseosos y de hielo no existe una superficie sólida cartografiable. El modo «Relieve» representa estructura y contraste de las capas nubosas, no montañas.
+Control independiente de atmósfera, nubes, luces nocturnas, órbitas, rastro, relieve, exposición y escala visual de los satélites.
 
-## Modelo
+## Enciclopedia
 
-- Órbita kepleriana elíptica.
-- Pericentro, excentricidad, inclinación y RAAN configurables.
-- Radios ecuatoriales y polares independientes.
-- Parámetro gravitacional y rotación específicos de cada cuerpo.
-- Intersección analítica del sensor con el esferoide planetario.
-- Campo de visión y orientación lateral del sensor.
-- Memoria de rastro y geometría acotadas para funcionamiento indefinido.
+El botón `i` abre una enciclopedia de 30 capítulos sobre mecánica orbital, sensores activos y pasivos, SAR, lidar, altimetría oceánica, resoluciones, cartografía, constelaciones, comunicaciones, GNSS y exploración planetaria. Incluye fórmulas, diagramas, imágenes NASA y enlaces a fuentes oficiales de NASA Earthdata, NASA Science, ESA y Navipedia.
+
+## Catálogo celeste
+
+Incluye los planetas principales y, además, Luna, Plutón, Ceres, Vesta, Fobos, Deimos, Ío, Europa, Ganímedes, Calisto, Titán, Encélado, Tritón y Caronte.
+
+Las texturas visibles no son siempre mapas de elevación. Cuando no existe un DEM disponible, el relieve es una ayuda visual derivada del contraste de la cartografía y se identifica como aproximado.
+
+## Modelo y límites
+
+- Propagación kepleriana de dos cuerpos.
+- Radios ecuatorial y polar, rotación y parámetro gravitacional por cuerpo.
+- Intersección analítica del sensor con el esferoide.
+- Conversión geográfica única para huella 3D, cobertura y mapa 2D.
+- Geometrías y frecuencia de actualización acotadas para funcionamiento continuo.
+- Las posiciones ISS y GNSS son perfiles educativos propagados por el simulador, no telemetría TLE en directo.
+- El cálculo GNSS y el presupuesto de comunicaciones son modelos pedagógicos, no herramientas de ingeniería operacional.

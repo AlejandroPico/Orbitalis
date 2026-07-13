@@ -1,116 +1,465 @@
 <!doctype html>
 <html lang="es">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#02070b">
-  <title>Orbitalis SCAN — Cartografía planetaria</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-  <main id="scene"></main>
-  <button id="menuButton" class="menu-button" aria-label="Abrir controles"><span></span><span></span><span></span></button>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#02070b" />
+    <title>Orbitalis — Laboratorio orbital</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main id="scene"></main>
+    <button id="menuButton" class="menu-button" aria-label="Abrir controles">
+      <span></span><span></span><span></span>
+    </button>
 
-  <aside id="drawer" class="drawer">
-    <header class="drawer-head">
-      <div class="brand"><img src="favicon.svg" alt=""><div><b>ORBITALIS</b><small>PLANETARY SCAN</small></div></div>
-      <button id="closeDrawer" aria-label="Cerrar">×</button>
-    </header>
+    <aside id="drawer" class="drawer">
+      <header class="drawer-head">
+        <div class="brand">
+          <img src="favicon.svg" alt="" />
+          <div><b>ORBITALIS</b><small>LABORATORIO ORBITAL</small></div>
+        </div>
+        <div class="head-actions">
+          <button
+            id="infoButton"
+            class="info-button"
+            aria-label="Abrir enciclopedia"
+          >
+            i</button
+          ><button id="closeDrawer" aria-label="Cerrar">×</button>
+        </div>
+      </header>
 
-    <nav class="body-grid" id="bodyGrid">
-      <button data-body="mercury">Mercurio</button><button data-body="venus">Venus</button>
-      <button data-body="earth" class="active">Tierra</button><button data-body="moon">Luna</button>
-      <button data-body="mars">Marte</button><button data-body="jupiter">Júpiter</button>
-      <button data-body="saturn">Saturno</button><button data-body="uranus">Urano</button>
-      <button data-body="neptune">Neptuno</button><button data-body="pluto">Plutón</button>
-    </nav>
+      <label class="body-picker"
+        ><span>Cuerpo celeste</span
+        ><select id="bodySelect"></select
+      ></label>
 
-    <nav class="mode-tabs">
-      <button class="active" data-tab="scan">Escáner</button>
-      <button data-tab="network">Comunicaciones</button>
-      <button data-tab="learn">Aprender</button>
-    </nav>
+      <nav class="mode-tabs">
+        <button class="active" data-tab="scan">Escáner</button>
+        <button data-tab="network">Comunicaciones</button>
+        <button data-tab="gnss">GNSS / GPS</button>
+        <button data-tab="visual">Gráficos</button>
+      </nav>
 
-    <div class="tab-pane active" data-pane="scan">
+      <div class="tab-pane active" data-pane="scan">
+        <section class="menu-section fleet-head">
+          <div class="section-title">
+            <h2>Constelación de observación</h2>
+            <span id="fleetCount">1 / 8</span>
+          </div>
+          <div id="scannerTabs" class="scanner-tabs"></div>
+          <div class="action-row">
+            <button id="addScanner">+ Lanzar</button
+            ><button id="cloneScanner">Duplicar</button
+            ><button id="removeScanner" class="danger">Retirar</button>
+          </div>
+          <div class="preset-row">
+            <button data-preset="polar">Polar</button
+            ><button data-preset="landsat">Landsat</button
+            ><button data-preset="sentinel">Sentinel</button
+            ><button data-preset="iss">ISS*</button>
+          </div>
+          <small class="fineprint"
+            >* Perfil orbital educativo de la ISS; no representa su posición TLE
+            en tiempo real.</small
+          >
+        </section>
+        <section class="menu-section">
+          <div class="section-title">
+            <h2 id="scannerTitle">Satélite 1</h2>
+            <i id="scannerColor"></i>
+          </div>
+          <label
+            >Nombre<input
+              id="scannerName"
+              class="text-input"
+              maxlength="18"
+              value="SCAN-01"
+          /></label>
+          <label
+            >Carga útil<select id="payload">
+              <option value="optical">Multiespectral</option>
+              <option value="altimetry">Altímetro láser</option>
+              <option value="sar">Radar SAR</option>
+              <option value="thermal">Infrarrojo térmico</option>
+              <option value="ocean">Altímetro oceánico</option>
+              <option value="atmosphere">Sondeador atmosférico</option>
+            </select></label
+          >
+          <label
+            >Altitud de periapsis <output id="altitudeOut">700 km</output
+            ><input id="altitude" type="range" min="100" max="5000" value="700"
+          /></label>
+          <label
+            >Excentricidad <output id="eccentricityOut">0.001</output
+            ><input
+              id="eccentricity"
+              type="range"
+              min="0"
+              max="0.25"
+              step="0.001"
+              value="0.001"
+          /></label>
+          <label
+            >Inclinación <output id="inclinationOut">98.2°</output
+            ><input
+              id="inclination"
+              type="range"
+              min="0"
+              max="180"
+              step="0.1"
+              value="98.2"
+          /></label>
+          <label
+            >RAAN <output id="raanOut">20°</output
+            ><input id="raan" type="range" min="0" max="360" value="20"
+          /></label>
+          <label
+            >Campo de visión <output id="fovOut">18°</output
+            ><input id="fov" type="range" min="2" max="70" value="18"
+          /></label>
+          <label
+            >Apuntamiento lateral <output id="lookOut">0°</output
+            ><input id="look" type="range" min="-40" max="40" value="0"
+          /></label>
+          <div class="switch-line">
+            <span>Adquisición de este satélite</span
+            ><button class="switch on" id="scanToggle"><i></i></button>
+          </div>
+          <div class="switch-line">
+            <span>Haz y huella</span
+            ><button class="switch on" id="beamToggle"><i></i></button>
+          </div>
+          <button id="resetMap" class="text-action">
+            Reiniciar cartografía del mundo
+          </button>
+        </section>
+        <section class="menu-section telemetry">
+          <h2>Telemetría del seleccionado</h2>
+          <dl>
+            <dt>Cuerpo</dt>
+            <dd id="tBody">Tierra</dd>
+            <dt>Altitud</dt>
+            <dd id="tAltitude">700 km</dd>
+            <dt>Velocidad</dt>
+            <dd id="tVelocity">7.50 km/s</dd>
+            <dt>Periodo</dt>
+            <dd id="tPeriod">99 min</dd>
+            <dt>Objetivo</dt>
+            <dd id="tCoords">0.0° · 0.0°</dd>
+            <dt>Franja</dt>
+            <dd id="tSwath">220 km</dd>
+            <dt>Cobertura fusionada</dt>
+            <dd id="tCoverage">0.00%</dd>
+          </dl>
+        </section>
+      </div>
 
-    <section class="menu-section">
-      <h2>Órbita</h2>
-      <label>Altitud de pericentro <output id="altitudeOut">700 km</output><input id="altitude" type="range" min="100" max="5000" value="700"></label>
-      <label>Excentricidad <output id="eccentricityOut">0.001</output><input id="eccentricity" type="range" min="0" max="0.25" step="0.001" value="0.001"></label>
-      <label>Inclinación <output id="inclinationOut">98.2°</output><input id="inclination" type="range" min="0" max="180" step="0.1" value="98.2"></label>
-      <label>RAAN <output id="raanOut">20°</output><input id="raan" type="range" min="0" max="360" value="20"></label>
+      <div class="tab-pane" data-pane="network">
+        <section class="menu-section">
+          <div class="section-title">
+            <h2>Red de comunicaciones</h2>
+            <span id="networkMode">MULTIPUNTO</span>
+          </div>
+          <div class="switch-line">
+            <span>Mostrar red orbital</span
+            ><button class="switch on" id="networkToggle"><i></i></button>
+          </div>
+          <label
+            >Satélites <output id="constellationOut">18</output
+            ><input
+              id="constellation"
+              type="range"
+              min="6"
+              max="36"
+              step="3"
+              value="18"
+          /></label>
+          <label
+            >Altitud de red <output id="networkAltOut">2.000 km</output
+            ><input
+              id="networkAlt"
+              type="range"
+              min="300"
+              max="20000"
+              step="100"
+              value="2000"
+          /></label>
+          <label>Centro emisor<select id="stationA"></select></label>
+          <label
+            >Añadir destino
+            <div class="target-add">
+              <select id="targetPicker"></select
+              ><button id="addTarget" aria-label="Añadir destino">+</button>
+            </div>
+          </label>
+          <div class="target-head">
+            <span>Destinos activos</span
+            ><button id="clearTargets">Limpiar</button>
+          </div>
+          <div id="selectedTargets" class="selected-targets"></div>
+          <div class="scenario-grid">
+            <button data-network-scenario="global">Red global</button
+            ><button data-network-scenario="europe">Europa</button
+            ><button data-network-scenario="americas">Américas</button
+            ><button data-network-scenario="asia">Asia-Pacífico</button>
+          </div>
+        </section>
+        <section class="menu-section network-status">
+          <h2>Estado del encaminamiento</h2>
+          <strong id="linkState">BUSCANDO RUTAS</strong>
+          <dl>
+            <dt>Destinos conectados</dt>
+            <dd id="connectedTargets">0 / 0</dd>
+            <dt>Satélites visibles origen</dt>
+            <dd id="visibleA">0</dd>
+            <dt>Saltos máximos</dt>
+            <dd id="routeHops">—</dd>
+            <dt>Retardo medio</dt>
+            <dd id="routeDelay">—</dd>
+          </dl>
+        </section>
+      </div>
+
+      <div class="tab-pane" data-pane="gnss">
+        <section class="menu-section">
+          <div class="section-title">
+            <h2>Laboratorio de posicionamiento</h2>
+            <span>TIERRA · MEO</span>
+          </div>
+          <p class="lesson">
+            El receptor calcula su posición a partir de pseudodistancias. Las
+            líneas muestran los satélites realmente visibles por encima de la
+            máscara de elevación.
+          </p>
+          <div class="switch-line">
+            <span>Mostrar constelación GNSS</span
+            ><button class="switch on" id="gnssToggle"><i></i></button>
+          </div>
+          <label
+            >Sistema<select id="gnssSystem">
+              <option value="gps">GPS · 24 satélites</option>
+              <option value="galileo">Galileo · 24 satélites</option>
+              <option value="mixed">GPS + Galileo · 30 satélites</option>
+            </select></label
+          >
+          <label
+            >Posición del receptor<select id="receiverCity"></select
+          ></label>
+          <label
+            >Máscara de elevación <output id="elevationOut">10°</output
+            ><input id="elevationMask" type="range" min="0" max="30" value="10"
+          /></label>
+          <label
+            >Error de reloj <output id="clockOut">1,5 m</output
+            ><input
+              id="clockError"
+              type="range"
+              min="0"
+              max="10"
+              step=".1"
+              value="1.5"
+          /></label>
+          <label
+            >Error atmosférico <output id="atmoErrorOut">2,0 m</output
+            ><input
+              id="atmoError"
+              type="range"
+              min="0"
+              max="15"
+              step=".1"
+              value="2"
+          /></label>
+          <label
+            >Multitrayecto <output id="multipathOut">1,0 m</output
+            ><input
+              id="multipath"
+              type="range"
+              min="0"
+              max="20"
+              step=".1"
+              value="1"
+          /></label>
+          <div class="gnss-flow" aria-label="Etapas de posicionamiento GNSS">
+            <div data-gnss-step="1"><b>1</b><span>Recibir señales</span></div>
+            <div data-gnss-step="2"><b>2</b><span>Medir distancias</span></div>
+            <div data-gnss-step="3"><b>3</b><span>Evaluar geometría</span></div>
+            <div data-gnss-step="4"><b>4</b><span>Resolver posición</span></div>
+          </div>
+        </section>
+        <section class="menu-section gnss-status">
+          <h2>Solución PVT simulada</h2>
+          <strong id="fixState">ADQUIRIENDO SEÑALES</strong>
+          <dl>
+            <dt>Satélites visibles</dt>
+            <dd id="gnssVisible">0</dd>
+            <dt>Geometría GDOP</dt>
+            <dd id="gdop">—</dd>
+            <dt>Error horizontal</dt>
+            <dd id="positionError">—</dd>
+            <dt>Altitud orbital</dt>
+            <dd id="gnssAltitude">20.200 km</dd>
+            <dt>Periodo</dt>
+            <dd id="gnssPeriod">11 h 58 min</dd>
+          </dl>
+          <div id="skyPlot" class="sky-plot"></div>
+          <small class="sky-help"
+            >Vista del cielo: el centro es el cenit y el borde, el
+            horizonte.</small
+          >
+        </section>
+      </div>
+
+      <div class="tab-pane" data-pane="visual">
+        <section class="menu-section">
+          <h2>Capas de escena</h2>
+          <div class="switch-line">
+            <span>Atmósfera</span
+            ><button class="switch on" id="atmosphereToggle"><i></i></button>
+          </div>
+          <div class="switch-line">
+            <span>Nubes, si existen</span
+            ><button class="switch on" id="cloudToggle"><i></i></button>
+          </div>
+          <div class="switch-line">
+            <span>Luces nocturnas</span
+            ><button class="switch on" id="nightToggle"><i></i></button>
+          </div>
+          <div class="switch-line">
+            <span>Órbitas de escáneres</span
+            ><button class="switch on" id="orbitToggle"><i></i></button>
+          </div>
+          <div class="switch-line">
+            <span>Rastro superficial</span
+            ><button class="switch on" id="trackToggle"><i></i></button>
+          </div>
+          <div class="switch-line">
+            <span>Cobertura coloreada sobre el globo</span
+            ><button class="switch on" id="scanOverlayToggle"><i></i></button>
+          </div>
+          <div class="switch-line">
+            <span>Iluminación plana / cuerpo completo</span
+            ><button class="switch" id="flatLightToggle"><i></i></button>
+          </div>
+          <label
+            >Relieve visual <output id="reliefOut">×6</output
+            ><input id="relief" type="range" min="1" max="12" value="6"
+          /></label>
+          <label
+            >Exposición <output id="exposureOut">0,86</output
+            ><input
+              id="exposure"
+              type="range"
+              min=".45"
+              max="1.4"
+              step=".01"
+              value=".86"
+          /></label>
+          <label
+            >Escala visual de satélites <output id="satScaleOut">×1,0</output
+            ><input
+              id="satScale"
+              type="range"
+              min=".4"
+              max="2"
+              step=".1"
+              value="1"
+          /></label>
+        </section>
+        <section class="menu-section legend-section">
+          <h2>Notas de representación</h2>
+          <p><i class="cyan"></i>Órbita prevista</p>
+          <p><i class="green"></i>Terreno adquirido</p>
+          <p id="dataNote">Relieve terrestre: topografía global.</p>
+        </section>
+      </div>
+    </aside>
+
+    <section id="mapPanel" class="map-panel">
+      <header>
+        <div>
+          <small>MAPA DE ADQUISICIÓN FUSIONADA</small
+          ><b id="mapTitle">TIERRA · ALTIMETRÍA</b>
+        </div>
+        <div class="map-actions">
+          <button data-mapmode="relief" class="active">Relieve</button
+          ><button data-mapmode="visual">Visual</button
+          ><button data-mapmode="land">Tierra firme</button
+          ><button data-mapmode="ocean">Superficie oceánica</button
+          ><button id="minimizeMap">—</button>
+        </div>
+      </header>
+      <div class="map-stage">
+        <canvas id="mapCanvas" width="1280" height="640"></canvas>
+        <div class="scanline"></div>
+        <span id="mapCoordinates">LAT 0.00° · LON 0.00°</span>
+      </div>
+      <footer>
+        <span id="mapCoverage">0.00% REVELADO</span
+        ><i><b id="mapProgress"></b></i
+        ><span id="mapType">DEM / TOPOGRAFÍA</span>
+      </footer>
     </section>
 
-    <section class="menu-section">
-      <h2>Escáner</h2>
-      <label>Campo de visión <output id="fovOut">18°</output><input id="fov" type="range" min="2" max="70" value="18"></label>
-      <label>Ángulo lateral <output id="lookOut">0°</output><input id="look" type="range" min="-40" max="40" value="0"></label>
-      <div class="switch-line"><span>Adquisición activa</span><button class="switch on" id="scanToggle" aria-label="Adquisición"><i></i></button></div>
-      <div class="switch-line"><span>Haz y huella</span><button class="switch on" id="beamToggle" aria-label="Haz"><i></i></button></div>
-      <button id="resetMap" class="text-action">Reiniciar cartografía de este mundo</button>
-    </section>
-
-    <section class="menu-section">
-      <h2>Visualización</h2>
-      <div class="switch-line"><span>Atmósfera</span><button class="switch on" id="atmosphereToggle"><i></i></button></div>
-      <div class="switch-line"><span>Nubes, si existen</span><button class="switch on" id="cloudToggle"><i></i></button></div>
-      <div class="switch-line"><span>Órbita prevista</span><button class="switch on" id="orbitToggle"><i></i></button></div>
-      <div class="switch-line"><span>Rastro superficial</span><button class="switch on" id="trackToggle"><i></i></button></div>
-      <label>Relieve visual <output id="reliefOut">×6</output><input id="relief" type="range" min="1" max="12" value="6"></label>
-    </section>
-
-    <section class="menu-section telemetry">
-      <h2>Telemetría</h2>
-      <dl><dt>Cuerpo</dt><dd id="tBody">Tierra</dd><dt>Altitud</dt><dd id="tAltitude">700 km</dd><dt>Velocidad</dt><dd id="tVelocity">7.50 km/s</dd><dt>Periodo</dt><dd id="tPeriod">99 min</dd><dt>Objetivo</dt><dd id="tCoords">0.0° · 0.0°</dd><dt>Franja</dt><dd id="tSwath">220 km</dd><dt>Cobertura</dt><dd id="tCoverage">0.00%</dd></dl>
-    </section>
-
-    <section class="menu-section legend-section">
-      <h2>Leyenda</h2><p><i class="cyan"></i>Órbita prevista</p><p><i class="green"></i>Terreno adquirido</p><p id="dataNote">Relieve terrestre: topografía global.</p>
-    </section>
+    <div class="world-label">
+      <small id="worldFamily">SISTEMA SOLAR</small
+      ><span id="worldType">PLANETA TERRESTRE</span><b id="worldName">TIERRA</b>
+    </div>
+    <div class="time-dock">
+      <button id="play" class="pause" aria-label="Pausa"></button
+      ><button data-speed="1">×1</button><button data-speed="10">×10</button
+      ><button data-speed="100" class="active">×100</button
+      ><button data-speed="600">×600</button
+      ><button data-speed="6400">×6400</button>
     </div>
 
-    <div class="tab-pane" data-pane="network">
-      <section class="menu-section">
-        <h2>Red orbital educativa</h2>
-        <p class="lesson">Construye una constelación y observa cuándo dos estaciones pueden comunicarse mediante satélites visibles sobre su horizonte.</p>
-        <div class="switch-line"><span>Mostrar constelación</span><button class="switch on" id="networkToggle"><i></i></button></div>
-        <label>Número de satélites <output id="constellationOut">12</output><input id="constellation" type="range" min="4" max="24" step="2" value="12"></label>
-        <label>Altitud de la red <output id="networkAltOut">2.000 km</output><input id="networkAlt" type="range" min="300" max="20000" step="100" value="2000"></label>
-        <label>Estación A<select id="stationA"><option value="madrid">Madrid</option><option value="mexico">Ciudad de México</option><option value="jakarta">Yakarta</option><option value="sydney">Sídney</option><option value="tokyo">Tokio</option></select></label>
-        <label>Estación B<select id="stationB"><option value="jakarta">Yakarta</option><option value="mexico">Ciudad de México</option><option value="madrid">Madrid</option><option value="sydney">Sídney</option><option value="tokyo">Tokio</option></select></label>
-      </section>
-      <section class="menu-section network-status">
-        <h2>Estado del enlace</h2>
-        <strong id="linkState">BUSCANDO RUTA</strong>
-        <dl><dt>Satélites visibles A</dt><dd id="visibleA">0</dd><dt>Satélites visibles B</dt><dd id="visibleB">0</dd><dt>Saltos de la ruta</dt><dd id="routeHops">—</dd><dt>Retardo estimado</dt><dd id="routeDelay">—</dd></dl>
-      </section>
-      <section class="menu-section legend-section"><h2>Leyenda de red</h2><p><i class="green"></i>Enlace disponible</p><p><i class="cyan"></i>Constelación orbital</p><p>Una estación solo ve satélites que están por encima de su horizonte local. La ocultación del planeta corta el enlace.</p></section>
+    <div
+      id="encyclopedia"
+      class="encyclopedia hidden"
+      role="dialog"
+      aria-modal="true"
+    >
+      <div class="ency-shell">
+        <aside class="ency-nav">
+          <div class="ency-brand">
+            <img src="favicon.svg" alt="" />
+            <div><b>ENCICLOPEDIA ORBITALIS</b><small>30 CAPÍTULOS</small></div>
+          </div>
+          <input id="encySearch" placeholder="Buscar concepto…" />
+          <div id="encyList"></div>
+        </aside>
+        <article class="ency-content">
+          <button id="closeEncyclopedia" class="ency-close">×</button>
+          <div id="encyArticle"></div>
+          <footer>
+            <button id="encyPrev">← Anterior</button
+            ><span id="encyPosition">1 / 30</span
+            ><button id="encyNext">Siguiente →</button>
+          </footer>
+        </article>
+      </div>
     </div>
 
-    <div class="tab-pane" data-pane="learn">
-      <section class="menu-section"><h2>Laboratorios guiados</h2>
-        <article class="lesson-card"><b>01 · Barrido polar</b><p>Usa una inclinación cercana a 90° y acelera el tiempo. La rotación del planeta desplaza cada pasada y termina cubriendo toda la superficie.</p></article>
-        <article class="lesson-card"><b>02 · Órbita y resolución</b><p>Reduce la altitud y el campo de visión. Obtendrás una franja menor, pero una observación potencialmente más detallada.</p></article>
-        <article class="lesson-card"><b>03 · Horizonte de radio</b><p>En Comunicaciones, compara una red baja con una alta. Más altitud aumenta la zona visible, aunque también el retardo.</p></article>
-        <article class="lesson-card"><b>04 · Cara oculta</b><p>El planeta bloquea las ondas de radio. Para mantener contacto continuo hacen falta relevos o una constelación distribuida.</p></article>
-      </section>
+    <div id="loader" class="loader">
+      <img src="favicon.svg" alt="" /><b>ORBITALIS</b
+      ><span id="loadStatus">Inicializando laboratorio orbital…</span>
     </div>
-  </aside>
-
-  <section id="mapPanel" class="map-panel">
-    <header><div><small>MAPA DE ADQUISICIÓN</small><b id="mapTitle">TIERRA · ALTIMETRÍA</b></div><div class="map-actions"><button data-mapmode="relief" class="active">Relieve</button><button data-mapmode="visual">Visual</button><button id="minimizeMap" aria-label="Minimizar">—</button></div></header>
-    <div class="map-stage"><canvas id="mapCanvas" width="1280" height="640"></canvas><div class="scanline"></div><span id="mapCoordinates">LAT 0.00° · LON 0.00°</span></div>
-    <footer><span id="mapCoverage">0.00% REVELADO</span><i><b id="mapProgress"></b></i><span id="mapType">DEM / TOPOGRAFÍA</span></footer>
-  </section>
-
-  <div class="world-label"><small id="worldType">PLANETA TERRESTRE</small><b id="worldName">TIERRA</b></div>
-  <div class="time-dock"><button id="play" class="pause" aria-label="Pausa"></button><button data-speed="1">×1</button><button data-speed="10">×10</button><button data-speed="100" class="active">×100</button><button data-speed="600">×600</button><button data-speed="6400">×6400</button></div>
-
-  <div id="loader" class="loader"><img src="favicon.svg" alt=""><b>CARGANDO CARTOGRAFÍA</b><span id="loadStatus">Inicializando motor gráfico…</span></div>
-  <div id="error" class="error hidden"><b>No se han podido cargar los mapas</b><span>Inicia el proyecto con <strong>INICIAR_ORBITALIS.bat</strong>. No abras index.html directamente.</span></div>
-  <script src="vendor/three.min.js"></script>
-  <script src="vendor/OrbitControls.js"></script>
-  <script src="app.js"></script>
-</body>
+    <div id="error" class="error hidden">
+      <b>No se han podido cargar los mapas</b
+      ><span
+        >Inicia el proyecto con <strong>INICIAR_ORBITALIS.bat</strong> y
+        comprueba la conexión.</span
+      >
+    </div>
+    <script src="v2-data.js"></script>
+    <script src="vendor/three.min.js"></script>
+    <script src="vendor/OrbitControls.js"></script>
+    <script src="app.js"></script>
+    <script src="encyclopedia.js"></script>
+  </body>
 </html>
