@@ -14,7 +14,7 @@ No abras `index.html` mediante `file://`: WebGL y los mapas remotos requieren un
 
 ### Constelación de observación
 
-- De 1 a 8 satélites de escaneo simultáneos.
+- De 1 a 12 satélites de escaneo simultáneos.
 - Subpestaña, nombre, color y telemetría independientes por vehículo.
 - Altitud, excentricidad, inclinación, RAAN, FOV y apuntamiento propios.
 - Cargas útiles: multiespectral, altimetría láser, SAR, térmico, altimetría oceánica y sondeo atmosférico.
