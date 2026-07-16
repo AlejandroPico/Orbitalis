@@ -201,10 +201,11 @@
       paint: "rgba(181,140,255,.52)",
     },
   };
-  const SCAN_COLORS = [
-    0x68ffb0, 0x65eaff, 0xffc66e, 0xff718b, 0xb58cff, 0x5d8fff, 0xffffff,
-    0x62d6a8,
-  ];
+  const MAX_SCANNERS = 12,
+    SCAN_COLORS = [
+      0x68ffb0, 0x65eaff, 0xffc66e, 0xff718b, 0xb58cff, 0x5d8fff, 0xffffff,
+      0x62d6a8, 0xff9de2, 0x9dff7a, 0x8fb6ff, 0xffe56b,
+    ];
   const state = {
     body: "earth",
     time: 0,
@@ -484,7 +485,7 @@
       };
       host.appendChild(b);
     });
-    $("fleetCount").textContent = scanFleet.length + " / 8";
+    $("fleetCount").textContent = scanFleet.length + " / " + MAX_SCANNERS;
     $("removeScanner").disabled = scanFleet.length === 1;
   }
   function syncControlsFromScanner() {
@@ -1687,7 +1688,7 @@
     "look",
   ].forEach((id) => ($(id).oninput = syncScannerFromControls));
   $("addScanner").onclick = () => {
-    if (scanFleet.length >= 8) return;
+    if (scanFleet.length >= MAX_SCANNERS) return;
     const base = activeScanner().cfg,
       s = createScanner({
         ...base,
@@ -1702,7 +1703,7 @@
     syncControlsFromScanner();
   };
   $("cloneScanner").onclick = () => {
-    if (scanFleet.length >= 8) return;
+    if (scanFleet.length >= MAX_SCANNERS) return;
     const base = activeScanner().cfg,
       s = createScanner({
         ...base,
